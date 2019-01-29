@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"github.com/Code-Hex/lisp/token"
+	"github.com/Code-Hex/go-elisp/token"
 )
 
 func TestLex(t *testing.T) {

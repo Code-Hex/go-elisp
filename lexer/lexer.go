@@ -5,7 +5,7 @@ import (
 	"errors"
 	"unicode"
 
-	"github.com/Code-Hex/lisp/token"
+	"github.com/Code-Hex/go-elisp/token"
 )
 
 type Lexer struct {

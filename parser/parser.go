@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Code-Hex/lisp/lexer"
-	"github.com/Code-Hex/lisp/token"
+	"github.com/Code-Hex/go-elisp/lexer"
+	"github.com/Code-Hex/go-elisp/token"
 )
 
 type Printer interface {
