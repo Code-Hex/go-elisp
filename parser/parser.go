@@ -25,16 +25,44 @@ type List struct {
 	Cdr Expression
 }
 
+type Atom struct {
+	Tok *token.Token
+}
+
+func (a *Atom) Print(indent int) {
+	if a.Tok != nil {
+		fmt.Println(strings.Repeat(" ", indent) + a.Tok.String())
+	}
+}
+
+type Integer struct {
+	*Atom
+	Value int
+}
+
+type Double struct {
+	*Atom
+	Value float64
+}
+
+type String struct {
+	*Atom
+	Value string
+}
+
+type Symbol struct {
+	*Atom
+	Value string
+}
+
 func (l *List) Print(indent int) {
-	l.Car.Print(indent + 4)
+	l.Car.Print(indent)
 	if l.Cdr != nil {
 		l.Cdr.Print(indent + 4)
 	} else {
 		fmt.Println(strings.Repeat(" ", indent) + "nil")
 	}
 }
-
-type ExpressionList []Expression
 
 type Parser struct {
 	lexer *lexer.Lexer
@@ -46,7 +74,7 @@ func NewParser(src string) *Parser {
 	}
 }
 
-func (p *Parser) Parse() (Expression, error) {
+func (p *Parser) ParseSExpr() (Expression, error) {
 	tok, err := p.lexer.Lex()
 	if err != nil {
 		return nil, err
@@ -56,11 +84,40 @@ func (p *Parser) Parse() (Expression, error) {
 	}
 	switch tok.Type {
 	case token.LParen:
+		sexp, err := p.ParseList()
+		if err != nil {
+			return nil, err
+		}
+		return sexp, nil
 	case token.EOF:
+		return nil, nil
 	}
 	return nil, nil
 }
 
 func (p *Parser) ParseList() (Expression, error) {
-	return nil, nil
+	tok, err := p.lexer.Lex()
+	if err != nil {
+		return nil, err
+	}
+	switch tok.Type {
+	case token.Symbol:
+		cdr, err := p.ParseList()
+		if err != nil {
+			return nil, err
+		}
+		return &List{
+			Car: &Symbol{
+				Atom: &Atom{
+					Tok: tok,
+				},
+				Value: tok.Literal,
+			},
+			Cdr: cdr,
+		}, nil
+	case token.RParen:
+		return nil, nil
+	default:
+		panic(tok)
+	}
 }

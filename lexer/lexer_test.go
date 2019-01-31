@@ -14,6 +14,31 @@ func TestLex(t *testing.T) {
 		expected []*token.Token
 	}{
 		{
+			src: "(a b c)",
+			expected: []*token.Token{
+				&token.Token{
+					Type:    "LParen",
+					Literal: "(",
+				},
+				&token.Token{
+					Type:    "Symbol",
+					Literal: "a",
+				},
+				&token.Token{
+					Type:    "Symbol",
+					Literal: "b",
+				},
+				&token.Token{
+					Type:    "Symbol",
+					Literal: "c",
+				},
+				&token.Token{
+					Type:    "RParen",
+					Literal: ")",
+				},
+			},
+		},
+		{
 			src: "(+ 4 5 1)",
 			expected: []*token.Token{
 				&token.Token{
