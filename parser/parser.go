@@ -31,7 +31,7 @@ type Atom struct {
 
 func (a *Atom) Print(indent int) {
 	if a.Tok != nil {
-		fmt.Println(strings.Repeat(" ", indent) + a.Tok.String())
+		fmt.Println(strings.Repeat("-", indent) + a.Tok.String())
 	}
 }
 
@@ -60,7 +60,7 @@ func (l *List) Print(indent int) {
 	if l.Cdr != nil {
 		l.Cdr.Print(indent + 4)
 	} else {
-		fmt.Println(strings.Repeat(" ", indent) + "nil")
+		fmt.Println(strings.Repeat("-", indent) + "nil")
 	}
 }
 
@@ -75,6 +75,10 @@ func NewParser(src string) *Parser {
 }
 
 func (p *Parser) ParseSExpr() (Expression, error) {
+	sexp, err := p.ParseList()
+	if err == nil {
+		return sexp, nil
+	}
 	tok, err := p.lexer.Lex()
 	if err != nil {
 		return nil, err
