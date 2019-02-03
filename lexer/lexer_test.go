@@ -276,16 +276,9 @@ func TestLex(t *testing.T) {
 	}
 	for _, c := range testcases {
 		lexer := NewLexer(c.src)
-		var tokens []*token.Token
-		for {
-			tok, err := lexer.Lex()
-			if err != nil {
-				t.Fatalf("err: %v", err)
-			}
-			if tok.Type == token.EOF {
-				break
-			}
-			tokens = append(tokens, tok)
+		tokens, err := lexer.Lex()
+		if err != nil {
+			t.Fatalf("err: %v", err)
 		}
 		if diff := cmp.Diff(tokens, c.expected); diff != "" {
 			t.Fatalf("(-got +want)\n%s\n", diff)
